@@ -1,0 +1,16 @@
+name: CountryBlock
+version: '${project.version}'
+main: com.github.bloodredx.countryblock.CountryBlock
+api-version: '1.13'
+authors: [Bloodred]
+description: Block or allow players from specific countries
+commands:
+  countryblock:
+    description: Main command for CountryBlock plugin
+    usage: /<command> [reload|add|remove|help]
+    aliases: [cb, cblock]
+    permission: countryblock.admin
+permissions:
+  countryblock.admin:
+    description: Allows access to all CountryBlock commands
+    default: op
