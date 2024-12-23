@@ -1,4 +1,4 @@
-package com.github.bloodredx.countryblock.metrics;
+package com.github.bloodredx.countryblock.manager;
 
 import com.github.bloodredx.countryblock.CountryBlock;
 import com.github.bloodredx.countryblock.metrics.Metrics;
