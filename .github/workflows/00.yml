@@ -1,9 +1,9 @@
-name: 00-pre1
+name: "00"
 
 on:
   push:
     branches:
-      - 00-pre1
+      - "00"
 
 jobs:
   build:
@@ -33,5 +33,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: compiled-plugin
-          path: target/*.jar
+          name: CountryBlock
+          path: target/CountryBlock*.jar
