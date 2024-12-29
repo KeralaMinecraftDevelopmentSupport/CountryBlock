@@ -3,12 +3,7 @@ package com.github.bloodredx.countryblock.command.handler;
 import com.github.bloodredx.countryblock.CountryBlock;
 import com.github.bloodredx.countryblock.utility.*;
 import org.bukkit.command.CommandSender;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class CountryCommandHandler {
@@ -19,16 +14,22 @@ public class CountryCommandHandler {
     }
 
     public void handleAdd(CommandSender sender, String country) {
-        List<String> countryList = plugin.getConfigManager().getCountryList();
+        if (country == null || country.trim().isEmpty()) {
+            sender.sendMessage(MessageUtil.error("Country/continent cannot be empty!"));
+            return;
+        }
+
+        country = country.trim().toUpperCase();
+        List<String> countryList = new ArrayList<>(plugin.getConfigManager().getCountryList());
         
         if (countryList.contains(country)) {
             sender.sendMessage(MessageUtil.info("This country/continent is already in the list!"));
             return;
         }
     
-        if ((country.startsWith("c:") || country.startsWith("C:")) && ContinentUtil.isContinent(country)) {
+        if ((country.startsWith("C:")) && ContinentUtil.isContinent(country)) {
             countryList.add(country);
-            saveCountryList(countryList);
+            plugin.getConfigManager().setCountryList(countryList);
             sender.sendMessage(MessageUtil.success("Continent added successfully!"));
             return;
         }
@@ -39,12 +40,19 @@ public class CountryCommandHandler {
         }
     
         countryList.add(country);
-        saveCountryList(countryList);
+        plugin.getConfigManager().setCountryList(countryList);
+        plugin.getLogger().info("Added country/continent: " + country);
         sender.sendMessage(MessageUtil.success("Country added successfully!"));
     }
     
     public void handleRemove(CommandSender sender, String country) {
-        List<String> countryList = plugin.getConfigManager().getCountryList();
+        if (country == null || country.trim().isEmpty()) {
+            sender.sendMessage(MessageUtil.error("Country/continent cannot be empty!"));
+            return;
+        }
+
+        country = country.trim().toUpperCase();
+        List<String> countryList = new ArrayList<>(plugin.getConfigManager().getCountryList());
         
         if (!countryList.contains(country)) {
             sender.sendMessage(MessageUtil.info("This country/continent is not in the list!"));
@@ -52,27 +60,8 @@ public class CountryCommandHandler {
         }
     
         countryList.remove(country);
-        saveCountryList(countryList);
+        plugin.getConfigManager().setCountryList(countryList);
+        plugin.getLogger().info("Removed country/continent: " + country);
         sender.sendMessage(MessageUtil.success("Country/continent removed successfully!"));
-    }
-    
-    private void saveCountryList(List<String> countryList) {
-        try {
-            File configFile = new File(plugin.getDataFolder(), "settings.conf");
-            String content = new String(Files.readAllBytes(configFile.toPath()));
-            
-            Config config = ConfigFactory.parseString(content);
-            
-            String updatedContent = content.replaceAll(
-                "(?m)^\\s*countries\\.list\\s*=\\s*\\[.*?\\]",
-                "countries.list = " + countryList.toString()
-            );
-            
-            Files.write(configFile.toPath(), updatedContent.getBytes());
-            
-            plugin.getConfigManager().loadConfig();
-        } catch (IOException e) {
-            plugin.getLogger().severe("Failed to save country list: " + e.getMessage());
-        }
     }
 }
