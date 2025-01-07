@@ -1,9 +1,9 @@
-name: "00"
+name: "0.0"
 
 on:
   push:
     branches:
-      - "00"
+      - "0.0"
 
 jobs:
   build:
