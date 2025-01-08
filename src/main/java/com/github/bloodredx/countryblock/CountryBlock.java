@@ -3,6 +3,7 @@ package com.github.bloodredx.countryblock;
 import com.github.bloodredx.countryblock.manager.CommandManager;
 import com.github.bloodredx.countryblock.manager.ConfigManager;
 import com.github.bloodredx.countryblock.manager.ListenerManager;
+import com.github.bloodredx.countryblock.manager.MetricsManager;
 import com.github.bloodredx.countryblock.utility.UpdateChecker;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,6 +13,7 @@ public class CountryBlock extends JavaPlugin {
     private CommandManager commandManager;
     private UpdateChecker updateChecker;
     private ListenerManager listenerManager;
+    private MetricsManager metricsManager;
     
     @Override
     public void onEnable() {
@@ -25,6 +27,7 @@ public class CountryBlock extends JavaPlugin {
             configManager.isIgnoreBeta(),
             configManager.isIgnoreAlpha()
         );
+        this.metricsManager = new MetricsManager(this);
         
         updateChecker.checkForUpdates();
     }
@@ -39,5 +42,9 @@ public class CountryBlock extends JavaPlugin {
 
     public UpdateChecker getUpdateChecker() {
         return updateChecker;
+    }
+
+    public MetricsManager getMetricsManager() {
+        return metricsManager;
     }
 }
