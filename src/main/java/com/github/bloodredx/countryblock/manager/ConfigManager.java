@@ -1,22 +1,16 @@
 package com.github.bloodredx.countryblock.manager;
 
 import com.github.bloodredx.countryblock.CountryBlock;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigValue;
-import com.typesafe.config.ConfigValueFactory;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
-import java.nio.file.*;
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 public class ConfigManager {
     private final CountryBlock plugin;
-    private Config config;
-    private static final String CONFIG_FILE = "settings.conf";
-    private static final String DEFAULT_CONFIG = "settings.conf";
+    private FileConfiguration config;
+    private static final String CONFIG_FILE = "config.yml";
     
     private boolean enableVpnCheck;
     private String modeType;
@@ -41,11 +35,9 @@ public class ConfigManager {
 
             if (!configFile.exists()) {
                 plugin.saveResource(CONFIG_FILE, false);
-            } else {
-                updateConfig();
             }
 
-            config = ConfigFactory.parseFile(configFile);
+            config = YamlConfiguration.loadConfiguration(configFile);
             loadConfigValues();
         } catch (Exception e) {
             plugin.getLogger().severe("Failed to load config: " + e.getMessage());
@@ -63,54 +55,18 @@ public class ConfigManager {
         ignoreBeta = config.getBoolean("updates.ignore-beta");
     }
 
-    private void updateConfig() {
-        try {
-            File configFile = new File(plugin.getDataFolder(), CONFIG_FILE);
-            InputStream defaultConfigStream = plugin.getResource(DEFAULT_CONFIG);
-            
-            if (defaultConfigStream == null) {
-                plugin.getLogger().warning("Default config not found in jar!");
-                return;
-            }
-
-            Config defaultConfig = ConfigFactory.parseReader(new InputStreamReader(defaultConfigStream));
-            Config currentConfig = ConfigFactory.parseFile(configFile);
-            
-            Config newConfig = defaultConfig.withFallback(currentConfig);
-            
-            String renderedConfig = newConfig.root().render();
-            Files.write(configFile.toPath(), renderedConfig.getBytes());
-            
-        } catch (Exception e) {
-            plugin.getLogger().severe("Failed to update config: " + e.getMessage());
-        }
-    }
-
     public void saveConfig() {
         try {
             File configFile = new File(plugin.getDataFolder(), CONFIG_FILE);
-            String renderedConfig = config.root().render();
-            Files.write(configFile.toPath(), renderedConfig.getBytes());
+            config.save(configFile);
         } catch (IOException e) {
             plugin.getLogger().severe("Failed to save config: " + e.getMessage());
         }
     }
 
-    public boolean isEnableVpnCheck() {
-        return enableVpnCheck;
-    }
-
-    public String getModeType() {
-        return modeType;
-    }
-
-    public List<String> getCountryList() {
-        return countryList;
-    }
-
     public void setCountryList(List<String> newList) {
         this.countryList = newList;
-        config = config.withValue("countries.list", ConfigValueFactory.fromIterable(newList));
+        config.set("countries.list", newList);
         saveConfig();
     }
 
