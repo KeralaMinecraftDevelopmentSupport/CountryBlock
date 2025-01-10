@@ -9,9 +9,9 @@ import java.util.*;
 
 public class ConfigManager {
     private final CountryBlock plugin;
+    private File configFile;
     private FileConfiguration config;
     private static final String CONFIG_FILE = "config.yml";
-    
     private boolean enableVpnCheck;
     private String modeType;
     private List<String> countryList;
@@ -27,12 +27,12 @@ public class ConfigManager {
 
     public void loadConfig() {
         try {
-            File configFile = new File(plugin.getDataFolder(), CONFIG_FILE);
-            
             if (!plugin.getDataFolder().exists()) {
                 plugin.getDataFolder().mkdirs();
             }
 
+            configFile = new File(plugin.getDataFolder(), CONFIG_FILE);
+            
             if (!configFile.exists()) {
                 plugin.saveResource(CONFIG_FILE, false);
             }
@@ -57,16 +57,35 @@ public class ConfigManager {
 
     public void saveConfig() {
         try {
-            File configFile = new File(plugin.getDataFolder(), CONFIG_FILE);
+            config.set("anti-vpn.enable", enableVpnCheck);
+            config.set("mode.type", modeType);
+            config.set("countries.list", countryList);
+            config.set("discord.webhook-url", webhookUrl);
+            config.set("discord.enable-notifications", enableNotifications);
+            config.set("updates.check-enabled", updateCheckEnabled);
+            config.set("updates.ignore-alpha", ignoreAlpha);
+            config.set("updates.ignore-beta", ignoreBeta);
+            
             config.save(configFile);
         } catch (IOException e) {
             plugin.getLogger().severe("Failed to save config: " + e.getMessage());
         }
     }
 
+    public boolean isEnableVpnCheck() {
+        return enableVpnCheck;
+    }
+
+    public String getModeType() {
+        return modeType;
+    }
+
+    public List<String> getCountryList() {
+        return new ArrayList<>(countryList);
+    }
+
     public void setCountryList(List<String> newList) {
-        this.countryList = newList;
-        config.set("countries.list", newList);
+        this.countryList = new ArrayList<>(newList);
         saveConfig();
     }
 
@@ -88,5 +107,10 @@ public class ConfigManager {
 
     public boolean isIgnoreBeta() {
         return ignoreBeta;
+    }
+
+    public void reloadConfig() {
+        config = YamlConfiguration.loadConfiguration(configFile);
+        loadConfigValues();
     }
 }
