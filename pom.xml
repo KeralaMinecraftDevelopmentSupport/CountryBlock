@@ -6,7 +6,7 @@
 
     <groupId>com.github.bloodredx</groupId>
     <artifactId>CountryBlock</artifactId>
-    <version>0.0</version>
+    <version>0.1-pre1</version>
 
     <properties>
         <java.version>1.8</java.version>
