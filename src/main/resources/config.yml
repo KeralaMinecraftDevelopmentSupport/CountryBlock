@@ -3,19 +3,23 @@ anti-vpn:
 
 mode:
   # "ALLOW" or "RESTRICT"
-  type: "RESTRICT"
+  type: RESTRICT
 
 countries:
   # Add country codes or names here
   # Add "c:" in front of continent codes
   list:
-    - "US"
-    - "GB"
-    - "c:EU"
+    - US
+    - GB
+    - c:EU
 
 discord:
   webhook-url: ""
   enable-notifications: false
+  username: "CountryBlock"
+  avatar-url: "https://cdn.modrinth.com/data/d4ZMML0z/8c558c50d7a69f4d2e9cc5e43bfd6e1d18000086_96.webp"
+  footer-text: "CountryBlock Plugin"
+  footer-icon-url: ""
   notify-on:
     vpn-detection: true
     country-restriction: true
