@@ -53,6 +53,10 @@ public class ConfigManager {
         updateCheckEnabled = config.getBoolean("updates.check-enabled");
         ignoreAlpha = config.getBoolean("updates.ignore-alpha");
         ignoreBeta = config.getBoolean("updates.ignore-beta");
+        webhookUsername = config.getString("discord.username", "CountryBlock");
+        webhookAvatarUrl = config.getString("discord.avatar-url", "https://cdn.modrinth.com/data/d4ZMML0z/8c558c50d7a69f4d2e9cc5e43bfd6e1d18000086_96.webp");
+        webhookFooterText = config.getString("discord.footer-text", "CountryBlock Plugin");
+        webhookFooterIconUrl = config.getString("discord.footer-icon-url", "");
     }
 
     public void saveConfig() {
@@ -70,6 +74,22 @@ public class ConfigManager {
         } catch (IOException e) {
             plugin.getLogger().severe("Failed to save config: " + e.getMessage());
         }
+    }
+
+    public String getWebhookUsername() {
+        return webhookUsername;
+    }
+    
+    public String getWebhookAvatarUrl() {
+        return webhookAvatarUrl;
+    }
+    
+    public String getWebhookFooterText() {
+        return webhookFooterText;
+    }
+    
+    public String getWebhookFooterIconUrl() {
+        return webhookFooterIconUrl;
     }
 
     public boolean isEnableVpnCheck() {
