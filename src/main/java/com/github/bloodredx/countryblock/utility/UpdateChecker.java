@@ -21,7 +21,7 @@ public class UpdateChecker {
     private String latestVersion = null;
     private String downloadUrl = null;
     
-    private static final String PROJECT_ID = "YOUR_PROJECT_ID_HERE";
+    private static final String PROJECT_ID = "CountryBlock";
 
     public UpdateChecker(CountryBlock plugin, boolean ignoreBeta, boolean ignoreAlpha) {
         this.plugin = plugin;
