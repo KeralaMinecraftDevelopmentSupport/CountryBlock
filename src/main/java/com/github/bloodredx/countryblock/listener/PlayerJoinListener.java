@@ -17,7 +17,13 @@ public class PlayerJoinListener implements Listener {
     public PlayerJoinListener(CountryBlock plugin) {
         this.plugin = plugin;
         this.proxyCheckIO = new ProxyCheckIO();
-        this.webhookUtil = new WebhookUtil(plugin.getConfigManager().getWebhookUrl());
+        this.webhookUtil = new WebhookUtil(
+            plugin.getConfigManager().getWebhookUrl(),
+            plugin.getConfigManager().getWebhookUsername(),
+            plugin.getConfigManager().getWebhookAvatarUrl(),
+            plugin.getConfigManager().getWebhookFooterText(),
+            plugin.getConfigManager().getWebhookFooterIconUrl()
+        );
     }
 
     @EventHandler
