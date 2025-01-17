@@ -1,34 +1,21 @@
 package com.github.bloodredx.countryblock.utility;
 
-import club.minnced.discord.webhook.WebhookClient;
-import club.minnced.discord.webhook.WebhookClientBuilder;
-import club.minnced.discord.webhook.send.WebhookEmbed;
-import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
-import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import com.eduardomcb.discord.webhook.*;
+import com.eduardomcb.discord.webhook.models.*;
 
-import java.time.Instant;
+import java.awt.Color;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class WebhookUtil {
-    private final WebhookClient client;
+    private final String webhookUrl;
     private final String username;
     private final String avatarUrl;
     private final String footerText;
     private final String footerIconUrl;
 
     public WebhookUtil(String webhookUrl, String username, String avatarUrl, String footerText, String footerIconUrl) {
-        if (webhookUrl != null && !webhookUrl.isEmpty()) {
-            WebhookClientBuilder builder = new WebhookClientBuilder(webhookUrl);
-            builder.setThreadFactory((job) -> {
-                Thread thread = new Thread(job);
-                thread.setName("CountryBlock Webhook");
-                thread.setDaemon(true);
-                return thread;
-            });
-            this.client = builder.build();
-        } else {
-            this.client = null;
-        }
-        
+        this.webhookUrl = webhookUrl;
         this.username = username;
         this.avatarUrl = avatarUrl;
         this.footerText = footerText;
@@ -36,31 +23,40 @@ public class WebhookUtil {
     }
 
     public void sendMessage(String title, String description, int color) {
-        if (client == null) return;
-
-        WebhookEmbed embed = new WebhookEmbedBuilder()
-            .setTitle(new WebhookEmbed.EmbedTitle(title, null))
-            .setDescription(description)
-            .setColor(color)
-            .setTimestamp(Instant.now())
-            .setFooter(new WebhookEmbed.EmbedFooter(footerText, footerIconUrl))
-            .build();
-
-        WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder()
-            .setUsername(username)
-            .setAvatarUrl(avatarUrl)
-            .addEmbeds(embed);
+        if (webhookUrl == null || webhookUrl.isEmpty()) return;
 
         try {
-            client.send(messageBuilder.build()).join();
+            Message message = new Message()
+                .setUsername(username)
+                .setAvatarUrl(avatarUrl);
+            Date currentDate = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            String formattedTimestamp = formatter.format(currentDate);
+            Embed embed = new Embed()
+                .setTitle(title)
+                .setDescription(description)
+                .setColor(color)
+                .setTimestamp(formattedTimestamp)
+                .setFooter(new Footer(footerText, footerIconUrl));
+            new WebhookManager()
+                .setChannelUrl(webhookUrl)
+                .setMessage(message)
+                .setEmbeds(new Embed[]{embed})
+                .setListener(new WebhookClient.Callback() {
+                    @Override
+                    public void onSuccess(String response) {
+                        // Success
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, String errorMessage) {
+                        System.out.println("Webhook Error - Code: " + statusCode + " Message: " + errorMessage);
+                    }
+                })
+                .exec();
+
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public void close() {
-        if (client != null) {
-            client.close();
         }
     }
 }
