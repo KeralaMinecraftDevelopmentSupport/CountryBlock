@@ -28,7 +28,7 @@ public class WebhookUtil {
         try {
             Message message = new Message()
                 .setUsername(username)
-                .setAvatarUrl(avatarUrl);
+                .setAvatarUrl(avatarUrl)
                 .setContent("(beta)");
             Date currentDate = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
