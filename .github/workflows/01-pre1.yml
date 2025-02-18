@@ -11,16 +11,16 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@main
         with:
           distribution: 'temurin'
           java-version: '21'
 
       - name: Cache Maven Dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@main
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -31,7 +31,7 @@ jobs:
         run: mvn clean package
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@main
         with:
           name: CountryBlock
           path: target/CountryBlock*.jar
