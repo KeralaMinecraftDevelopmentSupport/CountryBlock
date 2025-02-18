@@ -87,6 +87,18 @@
                                     <pattern>org.bstats</pattern>
                                     <shadedPattern>com.github.bloodredx.countryblock.metrics</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org.apache.http</pattern>
+                                    <shadedPattern>com.github.bloodredx.countryblock.dependency.apache.http</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                     <pattern>com.github.eduardomcb.discordwebhook</pattern>
+                                     <shadedPattern>com.github.bloodredx.countryblock.dependency.discord</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                     <pattern>org.json</pattern>
+                                     <shadedPattern>com.github.bloodredx.countryblock.dependency.json</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
